@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Assign Manager — {{ dept.name }}</h2>
+<article>
+<form method="post">
+  <label>Employee
+    <select name="employee_id" required>
+      {% for e in employees %}
+        <option value="{{ e.id }}">{{ e.full_name }} ({{ e.role }})</option>
+      {% endfor %}
+    </select>
+  </label>
+  <div class="actions">
+    <button type="submit">Assign</button>
+    <a href="{{ url_for('departments.list_departments') }}" role="button" class="secondary">Cancel</a>
+  </div>
+</form>
+</article>
+{% endblock %}

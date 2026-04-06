@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Leave Requests</h2>
+<a href="{{ url_for('leave.new') }}" role="button">+ New Leave Request</a>
+<table>
+  <thead>
+    <tr><th>ID</th><th>Type</th><th>Start</th><th>End</th><th>Submitted</th><th>Reason</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+  {% for r in requests %}
+  <tr>
+    <td>{{ r.id }}</td>
+    <td>{{ r.type.value }}</td>
+    <td>{{ r.start_date }}</td>
+    <td>{{ r.end_date }}</td>
+    <td>{{ r.date_of_request }}</td>
+    <td>{{ r.reason }}</td>
+    <td><span class="status-{{ r.status.name|lower }}">{{ r.status.value }}</span></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

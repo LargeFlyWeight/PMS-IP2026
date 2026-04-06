@@ -1,0 +1,23 @@
+app = "pms-ip2026"
+primary_region = "fra"
+
+[build]
+
+[env]
+  PMS_DB_PATH = "/data/pms.db"
+
+[[mounts]]
+  source = "pms_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256

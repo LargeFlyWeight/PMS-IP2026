@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Departments</h2>
+<a href="{{ url_for('departments.new') }}" role="button">+ New Department</a>
+
+<table>
+  <thead>
+    <tr><th>Code</th><th>Name</th><th>Location</th><th>Manager</th><th>Employees</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+  {% for d in departments %}
+  <tr>
+    <td><code>{{ d.code }}</code></td>
+    <td>{{ d.name }}</td>
+    <td>{{ d.location }}</td>
+    <td>{{ d.manager.full_name if d.manager else '—' }}</td>
+    <td>{{ d.employees|length }}</td>
+    <td>
+      <div class="actions">
+        <a href="{{ url_for('departments.edit', department_id=d.id) }}" role="button" class="outline">Edit</a>
+        <a href="{{ url_for('departments.assign_manager', department_id=d.id) }}" role="button" class="secondary outline">Manager</a>
+        <form class="inline-form" method="post" action="{{ url_for('departments.delete', department_id=d.id) }}" onsubmit="return confirm('Delete?')">
+          <button type="submit" class="contrast outline">Delete</button>
+        </form>
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

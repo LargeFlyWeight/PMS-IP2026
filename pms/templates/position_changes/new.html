@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>New Position Change</h2>
+<article>
+<form method="post">
+  <label>Employee
+    <select name="employee_id" required>
+      {% for e in employees %}
+        <option value="{{ e.id }}">{{ e.full_name }} — {{ e.position.title if e.position }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>New Position
+    <select name="new_position_id" required>
+      {% for p in positions %}<option value="{{ p.id }}">{{ p.title }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Reason
+    <textarea name="reason" required></textarea>
+  </label>
+  <div class="actions">
+    <button type="submit">Apply</button>
+    <a href="{{ url_for('position_changes.list_changes') }}" role="button" class="secondary">Cancel</a>
+  </div>
+</form>
+</article>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ "Edit" if pos else "New" }} Position</h2>
+<article>
+<form method="post">
+  <label>Title
+    <input type="text" name="title" value="{{ pos.title if pos }}" required>
+  </label>
+  <label>Salary grade
+    <input type="text" name="salary_grade" value="{{ pos.salary_grade if pos }}" required>
+  </label>
+  <label>Description
+    <textarea name="description">{{ pos.description if pos }}</textarea>
+  </label>
+  <div class="actions">
+    <button type="submit">Save</button>
+    <a href="{{ url_for('positions.list_positions') }}" role="button" class="secondary">Cancel</a>
+  </div>
+</form>
+</article>
+{% endblock %}

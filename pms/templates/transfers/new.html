@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>New Transfer</h2>
+<article>
+<form method="post">
+  <label>Employee
+    <select name="employee_id" required>
+      {% for e in employees %}
+        <option value="{{ e.id }}">{{ e.full_name }} — {{ e.department.name if e.department }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Destination Department
+    <select name="destination_department_id" required>
+      {% for d in departments %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <div class="actions">
+    <button type="submit">Transfer</button>
+    <a href="{{ url_for('transfers.list_transfers') }}" role="button" class="secondary">Cancel</a>
+  </div>
+</form>
+</article>
+{% endblock %}

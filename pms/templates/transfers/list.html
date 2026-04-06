@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Transfer Logs</h2>
+{% if current_user.role == 'administrator' %}
+<a href="{{ url_for('transfers.new') }}" role="button">+ New Transfer</a>
+<article>
+<form method="get">
+  <label>Filter by department
+    <select name="department_id">
+      <option value="">— all —</option>
+      {% for d in departments %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <button type="submit">Apply</button>
+</form>
+</article>
+{% endif %}
+<table>
+  <thead>
+    <tr><th>ID</th><th>Date</th><th>Employee</th><th>From</th><th>To</th></tr>
+  </thead>
+  <tbody>
+  {% for t in transfers %}
+  <tr>
+    <td>{{ t.id }}</td>
+    <td>{{ t.date_time.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{{ t.employee.full_name }}</td>
+    <td>{{ t.source_department.name }}</td>
+    <td>{{ t.destination_department.name }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

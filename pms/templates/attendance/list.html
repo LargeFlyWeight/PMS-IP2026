@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Attendance</h2>
+<a href="{{ url_for('attendance.record') }}" role="button">+ Record Today</a>
+<table>
+  <thead>
+    <tr><th>Date</th><th>Start</th><th>Lunch (min)</th><th>Finish</th><th>Hours</th></tr>
+  </thead>
+  <tbody>
+  {% for r in records %}
+  <tr>
+    <td>{{ r.date }}</td>
+    <td>{{ r.start_time }}</td>
+    <td>{{ r.lunch_break }}</td>
+    <td>{{ r.finish_time }}</td>
+    <td><strong>{{ r.calculate_working_hours() }}</strong></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

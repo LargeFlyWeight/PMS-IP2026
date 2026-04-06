@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - pms_data:/data
+    environment:
+      - PMS_SECRET_KEY=dev-secret-change-me
+      - PMS_DB_PATH=/data/pms.db
+      - PMS_SEED=full
+
+volumes:
+  pms_data:

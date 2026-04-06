@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<hgroup>
+  <h2>Employees</h2>
+  <p>{{ employees|length }} record(s)</p>
+</hgroup>
+
+{% if current_user.role == 'administrator' %}
+  <a href="{{ url_for('employees.new') }}" role="button">+ New Employee</a>
+{% endif %}
+
+<article>
+  <form method="get">
+    <div class="grid">
+      <label>Search by name
+        <input type="text" name="name" value="{{ filter_name }}" placeholder="Name or surname">
+      </label>
+      {% if current_user.role == 'administrator' %}
+      <label>Department
+        <select name="department_id">
+          <option value="">— all —</option>
+          {% for d in departments %}
+            <option value="{{ d.id }}" {% if filter_dept == d.id %}selected{% endif %}>{{ d.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      {% endif %}
+      <label>Position
+        <select name="position_id">
+          <option value="">— all —</option>
+          {% for p in positions %}
+            <option value="{{ p.id }}" {% if filter_pos == p.id %}selected{% endif %}>{{ p.title }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+    <button type="submit">Search</button>
+  </form>
+</article>
+
+<table>
+  <thead>
+    <tr><th>ID</th><th>Name</th><th>Role</th><th>Department</th><th>Position</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+  {% for e in employees %}
+  <tr>
+    <td>{{ e.id }}</td>
+    <td>{{ e.full_name }}</td>
+    <td><span class="role-badge">{{ e.role }}</span></td>
+    <td>{{ e.department.name if e.department }}</td>
+    <td>{{ e.position.title if e.position }}</td>
+    <td>
+      <div class="actions">
+        <a href="{{ url_for('employees.detail', employee_id=e.id) }}" role="button" class="secondary outline">View</a>
+        {% if current_user.role == 'administrator' %}
+          <a href="{{ url_for('employees.edit', employee_id=e.id) }}" role="button" class="outline">Edit</a>
+          <form class="inline-form" method="post" action="{{ url_for('employees.delete', employee_id=e.id) }}" onsubmit="return confirm('Delete this employee?')">
+            <button type="submit" class="contrast outline">Delete</button>
+          </form>
+        {% endif %}
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

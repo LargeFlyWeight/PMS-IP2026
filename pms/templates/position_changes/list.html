@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Position Change Logs</h2>
+{% if current_user.role == 'administrator' %}
+<a href="{{ url_for('position_changes.new') }}" role="button">+ New Position Change</a>
+<article>
+<form method="get">
+  <label>Filter by department
+    <select name="department_id">
+      <option value="">— all —</option>
+      {% for d in departments %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <button type="submit">Apply</button>
+</form>
+</article>
+{% endif %}
+<table>
+  <thead>
+    <tr><th>ID</th><th>Date</th><th>Employee</th><th>Previous</th><th>New</th><th>Reason</th></tr>
+  </thead>
+  <tbody>
+  {% for c in changes %}
+  <tr>
+    <td>{{ c.id }}</td>
+    <td>{{ c.date_time.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{{ c.employee.full_name }}</td>
+    <td>{{ c.previous_position.title }}</td>
+    <td>{{ c.new_position.title }}</td>
+    <td>{{ c.reason }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

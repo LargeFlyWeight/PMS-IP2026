@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<article style="max-width: 420px; margin: 4rem auto;">
+  <header><h2 style="margin: 0;">Sign in</h2></header>
+  <form method="post">
+    <label>Username
+      <input type="text" name="username" required autofocus>
+    </label>
+    <label>Password
+      <input type="password" name="password" required>
+    </label>
+    <button type="submit">Login</button>
+  </form>
+  <footer>
+    <small class="muted">Default admin: <code>adminPMS</code> / <code>Ip-2026!</code></small>
+  </footer>
+</article>
+{% endblock %}

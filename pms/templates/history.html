@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My History</h2>
+
+<article>
+  <header><strong>Transfer History</strong></header>
+  {% if transfers %}
+  <table>
+    <thead><tr><th>Date</th><th>From</th><th>To</th></tr></thead>
+    <tbody>
+    {% for t in transfers %}
+    <tr>
+      <td>{{ t.date_time.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td>{{ t.source_department.name }}</td>
+      <td>{{ t.destination_department.name }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<p class="muted">No transfers.</p>{% endif %}
+</article>
+
+<article>
+  <header><strong>Position Change History</strong></header>
+  {% if changes %}
+  <table>
+    <thead><tr><th>Date</th><th>Previous</th><th>New</th><th>Reason</th></tr></thead>
+    <tbody>
+    {% for c in changes %}
+    <tr>
+      <td>{{ c.date_time.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td>{{ c.previous_position.title }}</td>
+      <td>{{ c.new_position.title }}</td>
+      <td>{{ c.reason }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<p class="muted">No position changes.</p>{% endif %}
+</article>
+{% endblock %}

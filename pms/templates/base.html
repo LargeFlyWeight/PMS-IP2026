@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PMS{% block title %}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if current_user.is_authenticated %}
+<header class="app-header">
+  <div class="app-header-inner">
+    <a href="{{ url_for('main.dashboard') }}" class="brand">PMS</a>
+
+    <ul class="main-nav">
+      <li><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
+
+      <li class="has-submenu">
+        <span class="nav-group">My ▾</span>
+        <ul class="submenu">
+          <li><a href="{{ url_for('main.profile') }}">My Profile</a></li>
+          <li><a href="{{ url_for('leave.my_requests') }}">My Leave</a></li>
+          <li><a href="{{ url_for('attendance.my_attendance') }}">My Attendance</a></li>
+          <li><a href="{{ url_for('main.personal_calendar') }}">My Calendar</a></li>
+          <li><a href="{{ url_for('main.history') }}">My History</a></li>
+        </ul>
+      </li>
+
+      {% if current_user.role in ['manager', 'administrator'] %}
+      <li class="has-submenu">
+        <span class="nav-group">Department ▾</span>
+        <ul class="submenu">
+          <li><a href="{{ url_for('employees.list_employees') }}">Employees</a></li>
+          <li><a href="{{ url_for('leave.department_requests') }}">Leave Requests</a></li>
+          <li><a href="{{ url_for('attendance.department_attendance') }}">Attendance</a></li>
+          <li><a href="{{ url_for('transfers.list_transfers') }}">Transfer Logs</a></li>
+          <li><a href="{{ url_for('position_changes.list_changes') }}">Position Changes</a></li>
+        </ul>
+      </li>
+      {% endif %}
+
+      {% if current_user.role == 'administrator' %}
+      <li class="has-submenu">
+        <span class="nav-group">Admin ▾</span>
+        <ul class="submenu">
+          <li><a href="{{ url_for('departments.list_departments') }}">Departments</a></li>
+          <li><a href="{{ url_for('positions.list_positions') }}">Positions</a></li>
+          <li><a href="{{ url_for('employees.new') }}">New Employee</a></li>
+          <li><a href="{{ url_for('transfers.new') }}">New Transfer</a></li>
+          <li><a href="{{ url_for('position_changes.new') }}">New Position Change</a></li>
+        </ul>
+      </li>
+      {% endif %}
+    </ul>
+
+    <div class="user-box">
+      <span class="user-name">{{ current_user.full_name }}</span>
+      <span class="role-badge">{{ current_user.role }}</span>
+      <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+    </div>
+  </div>
+</header>
+{% endif %}
+
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, msg in messages %}
+      <article class="flash flash-{{ category }}">{{ msg }}</article>
+    {% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

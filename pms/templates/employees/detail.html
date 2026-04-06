@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<hgroup>
+  <h2>{{ emp.full_name }}</h2>
+  <p>Employee #{{ emp.id }} · <span class="role-badge">{{ emp.role }}</span></p>
+</hgroup>
+
+<article>
+  <table>
+    <tr><th>Username</th><td>{{ emp.username }}</td></tr>
+    <tr><th>Date of birth</th><td>{{ emp.date_of_birth }}</td></tr>
+    <tr><th>Email</th><td>{{ emp.email }}</td></tr>
+    <tr><th>Phone</th><td>{{ emp.phone_number }}</td></tr>
+    <tr><th>Department</th><td>{{ emp.department.name if emp.department }}</td></tr>
+    <tr><th>Position</th><td>{{ emp.position.title if emp.position }}</td></tr>
+  </table>
+</article>
+<a href="{{ url_for('employees.list_employees') }}" role="button" class="secondary">← Back</a>
+{% endblock %}

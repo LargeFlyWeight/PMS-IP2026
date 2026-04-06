@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Department Attendance</h2>
+{% if current_user.role == 'administrator' %}
+  <a href="{{ url_for('attendance.department_attendance', all=1) }}" role="button" class="secondary">Show all departments</a>
+{% endif %}
+<table>
+  <thead>
+    <tr><th>Date</th><th>Employee</th><th>Start</th><th>Lunch</th><th>Finish</th><th>Hours</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+  {% for r in records %}
+  <tr>
+    <td>{{ r.date }}</td>
+    <td>{{ r.employee.full_name }}</td>
+    <td>{{ r.start_time }}</td>
+    <td>{{ r.lunch_break }}</td>
+    <td>{{ r.finish_time }}</td>
+    <td><strong>{{ r.calculate_working_hours() }}</strong></td>
+    <td><a href="{{ url_for('attendance.edit', record_id=r.id) }}" role="button" class="outline">Edit</a></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

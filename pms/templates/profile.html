@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Profile</h2>
+
+<article>
+  <table>
+    <tr><th>Username</th><td>{{ current_user.username }}</td></tr>
+    <tr><th>Full name</th><td>{{ current_user.full_name }}</td></tr>
+    <tr><th>Date of birth</th><td>{{ current_user.date_of_birth }}</td></tr>
+    <tr><th>Department</th><td>{{ current_user.department.name if current_user.department }}</td></tr>
+    <tr><th>Position</th><td>{{ current_user.position.title if current_user.position }}</td></tr>
+  </table>
+</article>
+
+<article>
+  <header><strong>Update contact details</strong></header>
+  <form method="post">
+    <label>Email
+      <input type="email" name="email" value="{{ current_user.email }}" required>
+    </label>
+    <label>Phone
+      <input type="text" name="phone" value="{{ current_user.phone_number or '' }}">
+    </label>
+    <button type="submit">Save</button>
+  </form>
+</article>
+{% endblock %}

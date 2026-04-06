@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Positions</h2>
+<a href="{{ url_for('positions.new') }}" role="button">+ New Position</a>
+
+<table>
+  <thead>
+    <tr><th>ID</th><th>Title</th><th>Salary Grade</th><th>Description</th><th>Holders</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+  {% for p in positions %}
+  <tr>
+    <td>{{ p.id }}</td>
+    <td>{{ p.title }}</td>
+    <td><code>{{ p.salary_grade }}</code></td>
+    <td>{{ p.description }}</td>
+    <td>{{ p.employees|length }}</td>
+    <td>
+      <div class="actions">
+        <a href="{{ url_for('positions.edit', position_id=p.id) }}" role="button" class="outline">Edit</a>
+        <form class="inline-form" method="post" action="{{ url_for('positions.delete', position_id=p.id) }}" onsubmit="return confirm('Delete?')">
+          <button type="submit" class="contrast outline">Delete</button>
+        </form>
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

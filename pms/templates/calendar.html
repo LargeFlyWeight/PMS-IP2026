@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<hgroup>
+  <h2>Personal Calendar</h2>
+  <p>{{ month_name }} {{ year }}</p>
+</hgroup>
+
+<div class="toolbar">
+  <a href="{{ url_for('main.personal_calendar', year=prev_year, month=prev_month) }}"
+     role="button" class="btn-sm secondary">← Previous</a>
+  <a href="{{ url_for('main.personal_calendar') }}" role="button" class="btn-sm secondary">Today</a>
+  <a href="{{ url_for('main.personal_calendar', year=next_year, month=next_month) }}"
+     role="button" class="btn-sm secondary">Next →</a>
+</div>
+
+<table class="calendar-table">
+  <thead>
+    <tr>
+      <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for week in weeks %}
+    <tr>
+      {% for day in week %}
+        {% if day == 0 %}
+          <td class="empty"></td>
+        {% else %}
+          {% set is_leave = day in leave_days %}
+          {% set is_att = day in attendance_days %}
+          <td class="{% if is_leave %}leave{% endif %} {% if is_att %}attendance{% endif %}">
+            <span class="day-num">{{ day }}</span>
+            {% if is_leave %}<span class="badge">{{ leave_days[day] }}</span>{% endif %}
+            {% if is_att %}<span class="badge">{{ attendance_days[day].calculate_working_hours() }}h</span>{% endif %}
+          </td>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="legend">
+  <span><span class="swatch" style="background:#fff4d6"></span> Approved leave</span>
+  <span><span class="swatch" style="background:#eaf5dd"></span> Attendance recorded</span>
+</div>
+{% endblock %}
