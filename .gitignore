@@ -32,5 +32,8 @@ env/
 # Fly.io
 .fly/
 
+# Claude Code
+.claude/
+
 # Logs
 *.log
