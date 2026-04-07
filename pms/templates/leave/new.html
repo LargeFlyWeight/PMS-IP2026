@@ -5,23 +5,25 @@
 <form method="post">
   <label>Type
     <select name="type" required>
-      {% for t in leave_types %}<option value="{{ t.name }}">{{ t.value }}</option>{% endfor %}
+      {% for t in leave_types %}
+        <option value="{{ t.name }}" {% if form.type == t.name %}selected{% endif %}>{{ t.value }}</option>
+      {% endfor %}
     </select>
   </label>
   <div class="grid">
     <label>Start date
-      <input type="date" name="start_date" required>
+      <input type="date" name="start_date" value="{{ form.start_date }}" required>
     </label>
     <label>End date
-      <input type="date" name="end_date" required>
+      <input type="date" name="end_date" value="{{ form.end_date }}" required>
     </label>
   </div>
   <label>Reason
-    <textarea name="reason" required></textarea>
+    <textarea name="reason" required>{{ form.reason }}</textarea>
   </label>
   <div class="actions">
     <button type="submit">Submit</button>
-    <a href="{{ url_for('leave.my_requests') }}" role="button" class="secondary">Cancel</a>
+    <a href="{{ url_for('main.dashboard') }}" role="button" class="secondary">Cancel</a>
   </div>
 </form>
 </article>

@@ -4,22 +4,22 @@
 <article>
 <form method="post">
   <label>Date
-    <input type="date" name="date" value="{{ today }}" required>
+    <input type="date" name="date" value="{{ form.date }}" required>
   </label>
   <div class="grid">
     <label>Start time
-      <input type="time" name="start_time" required>
+      <input type="time" name="start_time" value="{{ form.start_time }}" required>
     </label>
     <label>Lunch break (0–60 min)
-      <input type="number" name="lunch_break" min="0" max="60" value="0" required>
+      <input type="number" name="lunch_break" min="0" max="60" value="{{ form.lunch_break }}" required>
     </label>
     <label>Finish time
-      <input type="time" name="finish_time" required>
+      <input type="time" name="finish_time" value="{{ form.finish_time }}" required>
     </label>
   </div>
   <div class="actions">
     <button type="submit">Save</button>
-    <a href="{{ url_for('attendance.my_attendance') }}" role="button" class="secondary">Cancel</a>
+    <a href="{{ url_for('main.dashboard') }}" role="button" class="secondary">Cancel</a>
   </div>
 </form>
 </article>

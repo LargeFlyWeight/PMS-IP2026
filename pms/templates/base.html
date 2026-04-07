@@ -30,7 +30,7 @@
         </ul>
       </li>
 
-      {% if current_user.role in ['manager', 'administrator'] %}
+      {% if current_user.role == 'manager' %}
       <li class="has-submenu">
         <span class="nav-group">Department ▾</span>
         <ul class="submenu">
@@ -45,13 +45,21 @@
 
       {% if current_user.role == 'administrator' %}
       <li class="has-submenu">
-        <span class="nav-group">Admin ▾</span>
+        <span class="nav-group">Manage ▾</span>
         <ul class="submenu">
+          <li><a href="{{ url_for('employees.list_employees') }}">Employees</a></li>
           <li><a href="{{ url_for('departments.list_departments') }}">Departments</a></li>
           <li><a href="{{ url_for('positions.list_positions') }}">Positions</a></li>
-          <li><a href="{{ url_for('employees.new') }}">New Employee</a></li>
-          <li><a href="{{ url_for('transfers.new') }}">New Transfer</a></li>
-          <li><a href="{{ url_for('position_changes.new') }}">New Position Change</a></li>
+          <li class="submenu-sep"></li>
+          <li><a href="{{ url_for('leave.department_requests') }}">Leave Requests</a></li>
+          <li><a href="{{ url_for('attendance.department_attendance') }}">Attendance</a></li>
+          <li class="submenu-sep"></li>
+          <li><a href="{{ url_for('transfers.list_transfers') }}">Transfer Logs</a></li>
+          <li><a href="{{ url_for('position_changes.list_changes') }}">Position Change Logs</a></li>
+          <li class="submenu-sep"></li>
+          <li><a href="{{ url_for('employees.new') }}">+ New Employee</a></li>
+          <li><a href="{{ url_for('transfers.new') }}">+ New Transfer</a></li>
+          <li><a href="{{ url_for('position_changes.new') }}">+ New Position Change</a></li>
         </ul>
       </li>
       {% endif %}
@@ -74,5 +82,51 @@
   {% endwith %}
   {% block content %}{% endblock %}
 </main>
+<script>
+function confirmShortPhone(form) {
+  var phone = form.querySelector('input[name="phone"]');
+  if (phone) {
+    var digits = (phone.value.match(/\d/g) || []).length;
+    if (digits > 0 && digits < 8) {
+      if (!confirm("Phone number looks short (" + digits + " digits). Is this really your number?")) {
+        return false;
+      }
+    }
+  }
+  var email = form.querySelector('input[name="email"]');
+  if (email && email.value) {
+    var v = email.value.trim();
+    var parts = v.split("@");
+    var suspicious = false;
+    if (parts.length !== 2) suspicious = true;
+    else {
+      var local = parts[0], domain = parts[1];
+      if (local.length < 2) suspicious = true;
+      var dotIdx = domain.lastIndexOf(".");
+      if (dotIdx < 1) suspicious = true;
+      else {
+        var tld = domain.substring(dotIdx + 1);
+        if (tld.length < 2) suspicious = true;
+      }
+    }
+    if (suspicious) {
+      if (!confirm("Email \"" + v + "\" looks unusual. Is this really your address?")) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+document.addEventListener("submit", function (e) {
+  var form = e.target;
+  if (form.tagName !== "FORM") return;
+  var buttons = form.querySelectorAll('button[type="submit"], button:not([type])');
+  buttons.forEach(function (b) {
+    b.disabled = true;
+    setTimeout(function () { b.disabled = false; }, 4000);
+  });
+});
+</script>
 </body>
 </html>

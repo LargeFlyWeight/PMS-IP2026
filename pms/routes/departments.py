@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from ..models import Administrator
 from ..repositories import DepartmentRepository, EmployeeRepository, CompanyRepository
 from ..services import DepartmentService, ServiceError
+from ._helpers import parse_int
 
 bp = Blueprint("departments", __name__, url_prefix="/departments")
 
@@ -29,20 +30,26 @@ def list_departments():
 @login_required
 @admin_required
 def new():
+    form = {"code": "", "name": "", "location": ""}
     if request.method == "POST":
+        form = {
+            "code": request.form.get("code", "").strip(),
+            "name": request.form.get("name", "").strip(),
+            "location": request.form.get("location", "").strip(),
+        }
         try:
             company = CompanyRepository().get_main()
             DepartmentService().create_department(
-                code=request.form.get("code", "").strip(),
-                name=request.form.get("name", "").strip(),
-                location=request.form.get("location", "").strip(),
+                code=form["code"],
+                name=form["name"],
+                location=form["location"],
                 company_id=company.id,
             )
             flash("Department created", "ok")
             return redirect(url_for("departments.list_departments"))
         except ServiceError as e:
             flash(str(e), "error")
-    return render_template("departments/form.html", dept=None)
+    return render_template("departments/form.html", dept=None, form=form)
 
 
 @bp.route("/<int:department_id>/edit", methods=["GET", "POST"])
@@ -52,18 +59,24 @@ def edit(department_id):
     dept = DepartmentRepository().get(department_id)
     if dept is None:
         abort(404)
+    form = {"code": dept.code, "name": dept.name, "location": dept.location or ""}
     if request.method == "POST":
+        form = {
+            "code": dept.code,
+            "name": request.form.get("name", "").strip(),
+            "location": request.form.get("location", "").strip(),
+        }
         try:
             DepartmentService().edit_department(
                 department_id=dept.id,
-                name=request.form.get("name", "").strip(),
-                location=request.form.get("location", "").strip(),
+                name=form["name"],
+                location=form["location"],
             )
             flash("Department updated", "ok")
             return redirect(url_for("departments.list_departments"))
         except ServiceError as e:
             flash(str(e), "error")
-    return render_template("departments/form.html", dept=dept)
+    return render_template("departments/form.html", dept=dept, form=form)
 
 
 @bp.route("/<int:department_id>/delete", methods=["POST"])
@@ -86,11 +99,16 @@ def assign_manager(department_id):
     if dept is None:
         abort(404)
     employees = EmployeeRepository().list_by_department(dept.id)
+    form = {"employee_id": ""}
     if request.method == "POST":
+        form = {"employee_id": request.form.get("employee_id", "")}
         try:
-            DepartmentService().assign_manager(dept.id, int(request.form.get("employee_id")))
+            DepartmentService().assign_manager(
+                dept.id, parse_int(form["employee_id"], "Employee")
+            )
             flash("Manager assigned", "ok")
             return redirect(url_for("departments.list_departments"))
         except ServiceError as e:
             flash(str(e), "error")
-    return render_template("departments/assign_manager.html", dept=dept, employees=employees)
+    return render_template("departments/assign_manager.html", dept=dept,
+                           employees=employees, form=form)

@@ -31,7 +31,7 @@
           <td class="{% if is_leave %}leave{% endif %} {% if is_att %}attendance{% endif %}">
             <span class="day-num">{{ day }}</span>
             {% if is_leave %}<span class="badge">{{ leave_days[day] }}</span>{% endif %}
-            {% if is_att %}<span class="badge">{{ attendance_days[day].calculate_working_hours() }}h</span>{% endif %}
+            {% if is_att %}<span class="badge">{{ attendance_days[day].working_time_display() }}</span>{% endif %}
           </td>
         {% endif %}
       {% endfor %}

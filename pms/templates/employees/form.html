@@ -2,11 +2,11 @@
 {% block content %}
 <h2>{{ "Edit" if emp else "New" }} Employee</h2>
 <article>
-<form method="post">
+<form method="post" onsubmit="return confirmShortPhone(this);">
   {% if not emp %}
   <div class="grid">
     <label>Username
-      <input type="text" name="username" required>
+      <input type="text" name="username" value="{{ form.username }}" required>
     </label>
     <label>Password
       <input type="password" name="password" required>
@@ -16,53 +16,55 @@
 
   <div class="grid">
     <label>Name
-      <input type="text" name="name" value="{{ emp.name if emp }}" required>
+      <input type="text" name="name" value="{{ form.name }}" required>
     </label>
     <label>Surname
-      <input type="text" name="surname" value="{{ emp.surname if emp }}" required>
+      <input type="text" name="surname" value="{{ form.surname }}" required>
     </label>
   </div>
 
   <div class="grid">
     <label>Email
-      <input type="email" name="email" value="{{ emp.email if emp }}" required>
+      <input type="email" name="email" value="{{ form.email }}" required>
     </label>
     <label>Phone
-      <input type="text" name="phone" value="{{ emp.phone_number if emp }}">
+      <input type="text" name="phone" value="{{ form.phone }}">
     </label>
   </div>
 
   <label>Date of birth
-    <input type="date" name="dob" value="{{ emp.date_of_birth if emp }}">
+    <input type="date" name="dob" value="{{ form.dob }}">
   </label>
 
   <div class="grid">
     <label>Department
       <select name="department_id" required>
+        <option value="">— select —</option>
         {% for d in departments %}
-          <option value="{{ d.id }}" {% if emp and emp.department_id == d.id %}selected{% endif %}>{{ d.name }}</option>
+          <option value="{{ d.id }}" {% if form.department_id|string == d.id|string %}selected{% endif %}>{{ d.name }}</option>
         {% endfor %}
       </select>
     </label>
     <label>Position
       <select name="position_id" required>
+        <option value="">— select —</option>
         {% for p in positions %}
-          <option value="{{ p.id }}" {% if emp and emp.position_id == p.id %}selected{% endif %}>{{ p.title }}</option>
+          <option value="{{ p.id }}" {% if form.position_id|string == p.id|string %}selected{% endif %}>{{ p.title }}</option>
         {% endfor %}
       </select>
     </label>
     <label>Role
       <select name="role">
-        <option value="employee" {% if emp and emp.role == 'employee' %}selected{% endif %}>employee</option>
-        <option value="manager" {% if emp and emp.role == 'manager' %}selected{% endif %}>manager</option>
-        <option value="administrator" {% if emp and emp.role == 'administrator' %}selected{% endif %}>administrator</option>
+        <option value="employee" {% if form.role == 'employee' %}selected{% endif %}>employee</option>
+        <option value="manager" {% if form.role == 'manager' %}selected{% endif %}>manager</option>
+        <option value="administrator" {% if form.role == 'administrator' %}selected{% endif %}>administrator</option>
       </select>
     </label>
   </div>
 
   <div class="actions">
     <button type="submit">Save</button>
-    <a href="{{ url_for('employees.list_employees') }}" role="button" class="secondary">Cancel</a>
+    <a href="{{ url_for('main.dashboard') }}" role="button" class="secondary">Cancel</a>
   </div>
 </form>
 </article>

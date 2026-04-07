@@ -6,7 +6,7 @@
 {% endif %}
 <table>
   <thead>
-    <tr><th>Date</th><th>Employee</th><th>Start</th><th>Lunch</th><th>Finish</th><th>Hours</th><th>Actions</th></tr>
+    <tr><th>Date</th><th>Employee</th><th>Start</th><th>Lunch</th><th>Finish</th><th>Worked</th><th>Actions</th></tr>
   </thead>
   <tbody>
   {% for r in records %}
@@ -16,7 +16,7 @@
     <td>{{ r.start_time }}</td>
     <td>{{ r.lunch_break }}</td>
     <td>{{ r.finish_time }}</td>
-    <td><strong>{{ r.calculate_working_hours() }}</strong></td>
+    <td><strong>{{ r.working_time_display() }}</strong></td>
     <td><a href="{{ url_for('attendance.edit', record_id=r.id) }}" role="button" class="outline">Edit</a></td>
   </tr>
   {% endfor %}

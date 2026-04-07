@@ -5,19 +5,23 @@
 <form method="post">
   <label>Employee
     <select name="employee_id" required>
+      <option value="">— select —</option>
       {% for e in employees %}
-        <option value="{{ e.id }}">{{ e.full_name }} — {{ e.department.name if e.department }}</option>
+        <option value="{{ e.id }}" {% if form.employee_id|string == e.id|string %}selected{% endif %}>{{ e.full_name }} — {{ e.department.name if e.department }}</option>
       {% endfor %}
     </select>
   </label>
   <label>Destination Department
     <select name="destination_department_id" required>
-      {% for d in departments %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}
+      <option value="">— select —</option>
+      {% for d in departments %}
+        <option value="{{ d.id }}" {% if form.destination_department_id|string == d.id|string %}selected{% endif %}>{{ d.name }}</option>
+      {% endfor %}
     </select>
   </label>
   <div class="actions">
     <button type="submit">Transfer</button>
-    <a href="{{ url_for('transfers.list_transfers') }}" role="button" class="secondary">Cancel</a>
+    <a href="{{ url_for('main.dashboard') }}" role="button" class="secondary">Cancel</a>
   </div>
 </form>
 </article>

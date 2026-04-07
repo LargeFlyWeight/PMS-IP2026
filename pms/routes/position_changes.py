@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from ..models import Administrator, Manager
 from ..repositories import PositionChangeRepository, EmployeeRepository, PositionRepository, DepartmentRepository
 from ..services import PositionChangeService, ServiceError
+from ._helpers import parse_int
 
 bp = Blueprint("position_changes", __name__, url_prefix="/position-changes")
 
@@ -49,15 +50,22 @@ def list_changes():
 def new():
     employees = EmployeeRepository().list_all()
     positions = PositionRepository().list_all()
+    form = {"employee_id": "", "new_position_id": "", "reason": ""}
     if request.method == "POST":
+        form = {
+            "employee_id": request.form.get("employee_id", ""),
+            "new_position_id": request.form.get("new_position_id", ""),
+            "reason": request.form.get("reason", "").strip(),
+        }
         try:
             PositionChangeService().change_position(
-                employee_id=int(request.form.get("employee_id")),
-                new_position_id=int(request.form.get("new_position_id")),
-                reason=request.form.get("reason", "").strip(),
+                employee_id=parse_int(form["employee_id"], "Employee"),
+                new_position_id=parse_int(form["new_position_id"], "New position"),
+                reason=form["reason"],
             )
             flash("Position changed", "ok")
             return redirect(url_for("position_changes.list_changes"))
         except ServiceError as e:
             flash(str(e), "error")
-    return render_template("position_changes/new.html", employees=employees, positions=positions)
+    return render_template("position_changes/new.html", employees=employees,
+                           positions=positions, form=form)

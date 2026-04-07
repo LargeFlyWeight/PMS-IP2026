@@ -5,14 +5,15 @@
 <form method="post">
   <label>Employee
     <select name="employee_id" required>
+      <option value="">— select —</option>
       {% for e in employees %}
-        <option value="{{ e.id }}">{{ e.full_name }} ({{ e.role }})</option>
+        <option value="{{ e.id }}" {% if form.employee_id|string == e.id|string %}selected{% endif %}>{{ e.full_name }} ({{ e.role }})</option>
       {% endfor %}
     </select>
   </label>
   <div class="actions">
     <button type="submit">Assign</button>
-    <a href="{{ url_for('departments.list_departments') }}" role="button" class="secondary">Cancel</a>
+    <a href="{{ url_for('main.dashboard') }}" role="button" class="secondary">Cancel</a>
   </div>
 </form>
 </article>

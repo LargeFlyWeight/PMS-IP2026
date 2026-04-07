@@ -4,17 +4,17 @@
 <article>
 <form method="post">
   <label>Title
-    <input type="text" name="title" value="{{ pos.title if pos }}" required>
+    <input type="text" name="title" value="{{ form.title }}" required>
   </label>
   <label>Salary grade
-    <input type="text" name="salary_grade" value="{{ pos.salary_grade if pos }}" required>
+    <input type="text" name="salary_grade" value="{{ form.salary_grade }}" required>
   </label>
   <label>Description
-    <textarea name="description">{{ pos.description if pos }}</textarea>
+    <textarea name="description">{{ form.description }}</textarea>
   </label>
   <div class="actions">
     <button type="submit">Save</button>
-    <a href="{{ url_for('positions.list_positions') }}" role="button" class="secondary">Cancel</a>
+    <a href="{{ url_for('main.dashboard') }}" role="button" class="secondary">Cancel</a>
   </div>
 </form>
 </article>

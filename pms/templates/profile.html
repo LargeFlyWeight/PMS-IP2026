@@ -14,12 +14,12 @@
 
 <article>
   <header><strong>Update contact details</strong></header>
-  <form method="post">
+  <form method="post" onsubmit="return confirmShortPhone(this);">
     <label>Email
-      <input type="email" name="email" value="{{ current_user.email }}" required>
+      <input type="email" name="email" value="{{ form.email }}" required>
     </label>
     <label>Phone
-      <input type="text" name="phone" value="{{ current_user.phone_number or '' }}">
+      <input type="text" name="phone" value="{{ form.phone }}">
     </label>
     <button type="submit">Save</button>
   </form>

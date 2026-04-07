@@ -18,8 +18,13 @@ def manager_or_admin_required(view):
     return wrapper
 
 
-def parse_date(value):
-    return datetime.strptime(value, "%Y-%m-%d").date()
+def parse_date(value, field_name):
+    if not value:
+        raise ServiceError(f"{field_name} is required")
+    try:
+        return datetime.strptime(value, "%Y-%m-%d").date()
+    except ValueError:
+        raise ServiceError(f"{field_name} has invalid format")
 
 
 @bp.route("/")
@@ -32,20 +37,27 @@ def my_requests():
 @bp.route("/new", methods=["GET", "POST"])
 @login_required
 def new():
+    form = {"type": "VACATION", "start_date": "", "end_date": "", "reason": ""}
     if request.method == "POST":
+        form = {
+            "type": request.form.get("type", "VACATION"),
+            "start_date": request.form.get("start_date", ""),
+            "end_date": request.form.get("end_date", ""),
+            "reason": request.form.get("reason", "").strip(),
+        }
         try:
             LeaveService().submit(
                 employee=current_user,
-                type_str=request.form.get("type"),
-                start_date=parse_date(request.form.get("start_date")),
-                end_date=parse_date(request.form.get("end_date")),
-                reason=request.form.get("reason", "").strip(),
+                type_str=form["type"],
+                start_date=parse_date(form["start_date"], "Start date"),
+                end_date=parse_date(form["end_date"], "End date"),
+                reason=form["reason"],
             )
             flash("Leave request submitted", "ok")
             return redirect(url_for("leave.my_requests"))
-        except (ServiceError, ValueError) as e:
+        except ServiceError as e:
             flash(str(e), "error")
-    return render_template("leave/new.html", leave_types=LeaveType)
+    return render_template("leave/new.html", leave_types=LeaveType, form=form)
 
 
 @bp.route("/department")

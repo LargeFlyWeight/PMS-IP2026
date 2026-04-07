@@ -15,5 +15,10 @@
     <tr><th>Position</th><td>{{ emp.position.title if emp.position }}</td></tr>
   </table>
 </article>
-<a href="{{ url_for('employees.list_employees') }}" role="button" class="secondary">← Back</a>
+<div class="actions">
+  <a href="{{ url_for('employees.list_employees') }}" role="button" class="secondary">← Back</a>
+  {% if current_user.role == 'administrator' %}
+    <a href="{{ url_for('employees.edit', employee_id=emp.id) }}" role="button">Edit</a>
+  {% endif %}
+</div>
 {% endblock %}

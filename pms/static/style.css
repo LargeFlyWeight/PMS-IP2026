@@ -138,6 +138,11 @@ body { background: #fafaf7; color: var(--ink); }
   background: var(--pistachio-light);
   color: var(--pistachio-darker);
 }
+.has-submenu .submenu .submenu-sep {
+  border-top: 1px solid var(--border);
+  margin: 0.35rem 0;
+  height: 0;
+}
 
 .user-box {
   display: flex;

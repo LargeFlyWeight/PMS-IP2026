@@ -21,19 +21,26 @@ def dashboard():
 @bp.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
+    form = {
+        "email": current_user.email,
+        "phone": current_user.phone_number or "",
+    }
     if request.method == "POST":
+        form = {
+            "email": request.form.get("email", "").strip(),
+            "phone": request.form.get("phone", "").strip(),
+        }
         try:
-            current_user.update_contact_details(
-                request.form.get("email", "").strip(),
-                request.form.get("phone", "").strip(),
-            )
+            current_user.update_contact_details(form["email"], form["phone"])
             from ..extensions import db
             db.session.commit()
             flash("Contact details updated", "ok")
+            return redirect(url_for("main.profile"))
         except (ValueError, ServiceError) as e:
             flash(str(e), "error")
-        return redirect(url_for("main.profile"))
-    return render_template("profile.html")
+            from ..extensions import db
+            db.session.rollback()
+    return render_template("profile.html", form=form)
 
 
 @bp.route("/history")

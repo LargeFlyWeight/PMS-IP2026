@@ -271,3 +271,11 @@ class AttendanceRecord(db.Model):
         finish_dt = datetime.combine(self.date, self.finish_time)
         delta = (finish_dt - start_dt).total_seconds() / 60.0 - self.lunch_break
         return round(delta / 60.0, 2)
+
+    def working_time_display(self):
+        start_dt = datetime.combine(self.date, self.start_time)
+        finish_dt = datetime.combine(self.date, self.finish_time)
+        minutes = int((finish_dt - start_dt).total_seconds() / 60.0 - self.lunch_break)
+        if minutes < 0:
+            minutes = 0
+        return f"{minutes // 60}h {minutes % 60:02d}m"

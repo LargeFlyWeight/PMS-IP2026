@@ -5,18 +5,18 @@
 <form method="post">
   {% if not dept %}
   <label>Code
-    <input type="text" name="code" required>
+    <input type="text" name="code" value="{{ form.code }}" required>
   </label>
   {% endif %}
   <label>Name
-    <input type="text" name="name" value="{{ dept.name if dept }}" required>
+    <input type="text" name="name" value="{{ form.name }}" required>
   </label>
   <label>Location (room)
-    <input type="text" name="location" value="{{ dept.location if dept }}">
+    <input type="text" name="location" value="{{ form.location }}">
   </label>
   <div class="actions">
     <button type="submit">Save</button>
-    <a href="{{ url_for('departments.list_departments') }}" role="button" class="secondary">Cancel</a>
+    <a href="{{ url_for('main.dashboard') }}" role="button" class="secondary">Cancel</a>
   </div>
 </form>
 </article>

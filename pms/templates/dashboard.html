@@ -8,40 +8,89 @@
 <div class="dashboard-grid">
   <article>
     <h4>Profile</h4>
-    <p class="muted">Department: {{ current_user.department.name if current_user.department else '—' }}</p>
-    <p class="muted">Position: {{ current_user.position.title if current_user.position else '—' }}</p>
-    <a href="{{ url_for('main.profile') }}" role="button" class="btn-sm">Edit profile</a>
+    <p class="muted">Department: {{ current_user.department.name if current_user.department else '—' }}<br>
+       Position: {{ current_user.position.title if current_user.position else '—' }}</p>
+    <a href="{{ url_for('main.profile') }}" role="button">Edit profile</a>
   </article>
+
   <article>
     <h4>Leave</h4>
     <p class="muted">Submit and track your leave requests.</p>
-    <a href="{{ url_for('leave.my_requests') }}" role="button" class="btn-sm secondary">My leave</a>
-    <a href="{{ url_for('leave.new') }}" role="button" class="btn-sm">New request</a>
+    <a href="{{ url_for('leave.my_requests') }}" role="button" class="secondary">My leave</a>
+    <a href="{{ url_for('leave.new') }}" role="button">New request</a>
   </article>
+
   <article>
     <h4>Attendance</h4>
     <p class="muted">Record your daily working time.</p>
-    <a href="{{ url_for('attendance.my_attendance') }}" role="button" class="btn-sm secondary">My records</a>
-    <a href="{{ url_for('attendance.record') }}" role="button" class="btn-sm">Record today</a>
+    <a href="{{ url_for('attendance.my_attendance') }}" role="button" class="secondary">My records</a>
+    <a href="{{ url_for('attendance.record') }}" role="button">Record today</a>
   </article>
+
   <article>
-    <h4>Calendar</h4>
-    <p class="muted">Approved leave + attendance overview.</p>
-    <a href="{{ url_for('main.personal_calendar') }}" role="button" class="btn-sm">Open</a>
+    <h4>Calendar &amp; History</h4>
+    <p class="muted">Approved leave, attendance, transfer history.</p>
+    <a href="{{ url_for('main.personal_calendar') }}" role="button">Calendar</a>
+    <a href="{{ url_for('main.history') }}" role="button" class="secondary">History</a>
   </article>
+
   {% if current_user.role in ['manager', 'administrator'] %}
   <article>
-    <h4>Department</h4>
-    <p class="muted">Manage your department's people.</p>
-    <a href="{{ url_for('employees.list_employees') }}" role="button" class="btn-sm">Employees</a>
+    <h4>Employees</h4>
+    <p class="muted">{% if current_user.role == 'administrator' %}Manage all employees.{% else %}View department employees.{% endif %}</p>
+    <a href="{{ url_for('employees.list_employees') }}" role="button" class="secondary">Browse</a>
+    {% if current_user.role == 'administrator' %}
+      <a href="{{ url_for('employees.new') }}" role="button">+ New employee</a>
+    {% endif %}
+  </article>
+
+  <article>
+    <h4>Department Leave</h4>
+    <p class="muted">Approve / reject leave requests from subordinates.</p>
+    <a href="{{ url_for('leave.department_requests') }}" role="button">Open</a>
+  </article>
+
+  <article>
+    <h4>Department Attendance</h4>
+    <p class="muted">View and edit attendance records.</p>
+    <a href="{{ url_for('attendance.department_attendance') }}" role="button">Open</a>
   </article>
   {% endif %}
+
   {% if current_user.role == 'administrator' %}
   <article>
-    <h4>Organization</h4>
-    <p class="muted">Departments, positions, transfers.</p>
-    <a href="{{ url_for('departments.list_departments') }}" role="button" class="btn-sm">Departments</a>
-    <a href="{{ url_for('positions.list_positions') }}" role="button" class="btn-sm secondary">Positions</a>
+    <h4>Departments</h4>
+    <p class="muted">Create, edit, assign managers.</p>
+    <a href="{{ url_for('departments.list_departments') }}" role="button" class="secondary">Browse</a>
+    <a href="{{ url_for('departments.new') }}" role="button">+ New department</a>
+  </article>
+
+  <article>
+    <h4>Positions</h4>
+    <p class="muted">Job titles and salary grades.</p>
+    <a href="{{ url_for('positions.list_positions') }}" role="button" class="secondary">Browse</a>
+    <a href="{{ url_for('positions.new') }}" role="button">+ New position</a>
+  </article>
+
+  <article>
+    <h4>Transfers</h4>
+    <p class="muted">Move employees between departments.</p>
+    <a href="{{ url_for('transfers.list_transfers') }}" role="button" class="secondary">Logs</a>
+    <a href="{{ url_for('transfers.new') }}" role="button">+ New transfer</a>
+  </article>
+
+  <article>
+    <h4>Position Changes</h4>
+    <p class="muted">Change employee positions with reason.</p>
+    <a href="{{ url_for('position_changes.list_changes') }}" role="button" class="secondary">Logs</a>
+    <a href="{{ url_for('position_changes.new') }}" role="button">+ New change</a>
+  </article>
+  {% elif current_user.role == 'manager' %}
+  <article>
+    <h4>Logs</h4>
+    <p class="muted">Read-only transfer and position change history.</p>
+    <a href="{{ url_for('transfers.list_transfers') }}" role="button" class="secondary">Transfers</a>
+    <a href="{{ url_for('position_changes.list_changes') }}" role="button" class="secondary">Position changes</a>
   </article>
   {% endif %}
 </div>

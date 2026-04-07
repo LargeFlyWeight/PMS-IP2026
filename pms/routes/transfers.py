@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from ..models import Administrator, Manager
 from ..repositories import TransferRepository, EmployeeRepository, DepartmentRepository
 from ..services import TransferService, ServiceError
+from ._helpers import parse_int
 
 bp = Blueprint("transfers", __name__, url_prefix="/transfers")
 
@@ -49,14 +50,20 @@ def list_transfers():
 def new():
     employees = EmployeeRepository().list_all()
     departments = DepartmentRepository().list_all()
+    form = {"employee_id": "", "destination_department_id": ""}
     if request.method == "POST":
+        form = {
+            "employee_id": request.form.get("employee_id", ""),
+            "destination_department_id": request.form.get("destination_department_id", ""),
+        }
         try:
             TransferService().transfer_employee(
-                employee_id=int(request.form.get("employee_id")),
-                destination_department_id=int(request.form.get("destination_department_id")),
+                employee_id=parse_int(form["employee_id"], "Employee"),
+                destination_department_id=parse_int(form["destination_department_id"], "Destination department"),
             )
             flash("Employee transferred", "ok")
             return redirect(url_for("transfers.list_transfers"))
         except ServiceError as e:
             flash(str(e), "error")
-    return render_template("transfers/new.html", employees=employees, departments=departments)
+    return render_template("transfers/new.html", employees=employees,
+                           departments=departments, form=form)
