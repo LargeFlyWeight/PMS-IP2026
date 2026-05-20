@@ -148,6 +148,31 @@ def edit(employee_id):
                            departments=departments, positions=positions)
 
 
+@bp.route("/<int:employee_id>/reset-password", methods=["GET", "POST"])
+@login_required
+@admin_required
+def reset_password(employee_id):
+    emp = EmployeeRepository().get(employee_id)
+    if emp is None:
+        abort(404)
+    if request.method == "POST":
+        new_pw = request.form.get("password", "").strip()
+        confirm = request.form.get("confirm", "").strip()
+        if not new_pw:
+            flash("Password cannot be empty.", "error")
+        elif new_pw != confirm:
+            flash("Passwords do not match.", "error")
+        elif len(new_pw) < 6:
+            flash("Password must be at least 6 characters.", "error")
+        else:
+            emp.set_password(new_pw)
+            from ..extensions import db
+            db.session.commit()
+            flash(f"Password for {emp.full_name} has been reset.", "ok")
+            return redirect(url_for("employees.detail", employee_id=emp.id))
+    return render_template("employees/reset_password.html", emp=emp)
+
+
 @bp.route("/<int:employee_id>/delete", methods=["POST"])
 @login_required
 @admin_required
